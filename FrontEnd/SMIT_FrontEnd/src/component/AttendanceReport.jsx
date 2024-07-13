@@ -170,11 +170,13 @@
 
 // export default AttendanceReport;
 
+// running code
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
 import QRScanner from "./QrModal";
-import Navbar from "./Navbar";
+import AttendanceTable from "./AttendanceTable";
 
 const AttendanceReport = ({ scannedStudents, onStartScanner }) => {
   const [allData, setAllData] = useState([]);
@@ -216,120 +218,232 @@ const AttendanceReport = ({ scannedStudents, onStartScanner }) => {
   }, [scannedStudents, currentDay]);
 
   return (
-    <div className="">
-      <div className="flex flex-1 flex-col md:flex-row">
-        <main className="flex-1 p-6">
-          <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-4">Attendance</h2>
-            <div className="flex flex-wrap mb-4">
-              <button
-                onClick={toggleScanner}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
+    <div className="flex flex-1 flex-col md:flex-row">
+      <main className="flex-1 p-6">
+        <div className="bg-white shadow rounded-lg p-6">
+          <h2 className="text-xl font-bold mb-4">Attendance</h2>
+          <div className="flex flex-wrap mb-4">
+            <button
+              onClick={toggleScanner}
+              className="bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              {isScannerActive ? "Stop Attendance" : "Start Attendance"}
+            </button>
+            <select className="border p-2 mr-2 mb-2 rounded">
+              <option>Select Campus</option>
+              {allData?.length > 0 &&
+                allData
+                  ?.filter((filItem) => filItem === "campuses")
+                  ?.map((item) => (
+                    <option key={item?._id}>{item?.name}</option>
+                  ))}
+            </select>
+            <select className="border p-2 mr-2 mb-2 rounded">
+              <option>Select Course</option>
+              {allData?.length > 0 &&
+                allData
+                  ?.filter((filItem) => filItem === "course")
+                  ?.map((item) => (
+                    <option key={item?._id}>{item?.name}</option>
+                  ))}
+            </select>
+            <select className="border p-2 mr-2 mb-2 rounded">
+              <option>Select Batch</option>
+              {allData?.length > 0 &&
+                allData
+                  ?.filter((filItem) => filItem === "batches")
+                  ?.map((item) => (
+                    <option key={item?._id}>{item?.name}</option>
+                  ))}
+            </select>
+            <select className="border p-2 mr-2 mb-2 rounded">
+              <option>Instructor Name</option>
+              {allData?.length > 0 &&
+                allData
+                  ?.filter((filItem) => filItem === "teachers")
+                  ?.map((item) => (
+                    <option key={item?._id}>{item?.name}</option>
+                  ))}
+            </select>
+            <button className="bg-blue-600 text-white px-4 py-2 rounded">
+              Search
+            </button>
+            <div>
+              <label htmlFor="currentDay" className="mr-2">
+                Day:
+              </label>
+              <select
+                id="currentDay"
+                value={currentDay}
+                onChange={(e) => setCurrentDay(Number(e.target.value))}
+                className="border p-2 mr-2 mb-2 rounded"
               >
-                {isScannerActive ? "Stop Attendance" : "Start Attendance"}
-              </button>
-              <select className="border p-2 mr-2 mb-2 rounded">
-                <option>Select Campus</option>
-                {allData?.length > 0 &&
-                  allData
-                    ?.filter((filItem) => filItem === "campuses")
-                    ?.map((item) => (
-                      <option key={item?._id}>{item?.name}</option>
-                    ))}
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
               </select>
-              <select className="border p-2 mr-2 mb-2 rounded">
-                <option>Select Course</option>
-                {allData?.length > 0 &&
-                  allData
-                    ?.filter((filItem) => filItem === "course")
-                    ?.map((item) => (
-                      <option key={item?._id}>{item?.name}</option>
-                    ))}
-              </select>
-              <select className="border p-2 mr-2 mb-2 rounded">
-                <option>Select Batch</option>
-                {allData?.length > 0 &&
-                  allData
-                    ?.filter((filItem) => filItem === "batches")
-                    ?.map((item) => (
-                      <option key={item?._id}>{item?.name}</option>
-                    ))}
-              </select>
-              <select className="border p-2 mr-2 mb-2 rounded">
-                <option>Instructor Name</option>
-                {allData?.length > 0 &&
-                  allData
-                    ?.filter((filItem) => filItem === "teachers")
-                    ?.map((item) => (
-                      <option key={item?._id}>{item?.name}</option>
-                    ))}
-              </select>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded">
-                Search
-              </button>
-              <div>
-                <label htmlFor="currentDay" className="mr-2">
-                  Day:
-                </label>
-                <select
-                  id="currentDay"
-                  value={currentDay}
-                  onChange={(e) => setCurrentDay(Number(e.target.value))}
-                  className="border p-2 mr-2 mb-2 rounded"
-                >
-                  {Array.from({ length: 12 }, (_, i) => (
-                    <option key={i + 1} value={i + 1}>
-                      {i + 1}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            {isScannerActive && (
-              <QRScanner
-                onScannedStudentsChange={onStartScanner}
-                isScannerActive={isScannerActive}
-              />
-            )}
-            <div className="overflow-auto h-[55vh]">
-              <table className="table-auto w-full">
-                <thead className="sticky top-0 bg-white">
-                  <tr>
-                    <th className="border px-4 py-2">Students</th>
-                    {Array.from({ length: 12 }, (_, i) => (
-                      <th key={i} className="border px-4 py-2">
-                        {i + 1}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {studentData?.map((student, idx) => (
-                    <tr key={idx}>
-                      <td className="border bg-white px-4 py-2 flex items-center">
-                        <p className="w-max">{`${student.name} ${student.roll_no}`}</p>
-                      </td>
-                      {Array.from({ length: 12 }, (_, dayIdx) => (
-                        <td
-                          key={dayIdx}
-                          className="border px-4 py-2 text-center"
-                        >
-                          {attendanceRecord[student.roll_no] &&
-                          attendanceRecord[student.roll_no][dayIdx + 1] ? (
-                            <FaCheckCircle className="text-green-500" />
-                          ) : null}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
           </div>
-        </main>
-      </div>
+          {isScannerActive && (
+            <QRScanner
+              onScannedStudentsChange={onStartScanner}
+              isScannerActive={isScannerActive}
+            />
+          )}
+          {/* <AttendanceTable scannedStudents={students} /> */}
+          <div className="overflow-auto h-[55vh]">
+            <table className="table-auto w-full">
+              <thead className="sticky top-0 bg-white">
+                <tr>
+                  <th className="border px-4 py-2">Students</th>
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <th key={i} className="border px-4 py-2">
+                      {i + 1}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {studentData?.map((student, idx) => (
+                  <tr key={idx}>
+                    <td className="border bg-white px-4 py-2 flex items-center">
+                      <p className="w-max">{`${student.name} ${student.roll_no}`}</p>
+                    </td>
+                    {Array.from({ length: 12 }, (_, dayIdx) => (
+                      <td key={dayIdx} className="border px-4 py-2 text-center">
+                        {attendanceRecord[student.roll_no] &&
+                        attendanceRecord[student.roll_no][dayIdx + 1] ? (
+                          <FaCheckCircle className="text-green-500" />
+                        ) : null}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
 
 export default AttendanceReport;
+
+// test code
+
+// import React, { useEffect, useState } from "react";
+// import axios from "axios";
+// import AttendanceTable from "./AttendanceTable";
+
+// const AttendanceReport = ({ scannedStudents, onStartScanner }) => {
+//   const [allData, setAllData] = useState({});
+//   const [currentDay, setCurrentDay] = useState(1);
+//   const [attendanceRecord, setAttendanceRecord] = useState({});
+
+//   const fetchData = async () => {
+//     try {
+//       const response = await axios.get("http://localhost:3000/data");
+//       setAllData(response.data);
+//     } catch (error) {
+//       console.error("Error fetching data:", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchData();
+//   }, []);
+
+//   useEffect(() => {
+//     if (scannedStudents.length > 0 && allData.students) {
+//       setAttendanceRecord((prevRecord) => {
+//         const newRecord = { ...prevRecord };
+//         scannedStudents.forEach((scannedRollNo) => {
+//           const student = allData.students.find(
+//             (student) => student.roll_no === scannedRollNo
+//           );
+//           if (student) {
+//             const { roll_no } = student;
+//             if (!newRecord[roll_no]) {
+//               newRecord[roll_no] = {};
+//             }
+//             newRecord[roll_no][currentDay] = true;
+//           }
+//         });
+//         return newRecord;
+//       });
+//     }
+//   }, [scannedStudents, currentDay, allData.students]);
+
+//   return (
+//     <div className="flex flex-1 flex-col md:flex-row">
+//       <main className="flex-1 p-6">
+//         <div className="bg-white shadow rounded-lg p-6">
+//           <h2 className="text-xl font-bold mb-4">Attendance</h2>
+//           <div className="flex flex-wrap mb-4">
+//             <button
+//               onClick={onStartScanner}
+//               className="bg-blue-600 text-white px-4 py-2 rounded"
+//             >
+//               Start Attendance
+//             </button>
+//             <select className="border p-2 mr-2 mb-2 rounded">
+//               <option>Select Campus</option>
+//               {allData?.campuses?.map((item) => (
+//                 <option key={item?._id}>{item?.name}</option>
+//               ))}
+//             </select>
+//             <select className="border p-2 mr-2 mb-2 rounded">
+//               <option>Select Course</option>
+//               {allData?.courses?.map((item) => (
+//                 <option key={item?._id}>{item?.name}</option>
+//               ))}
+//             </select>
+//             <select className="border p-2 mr-2 mb-2 rounded">
+//               <option>Select Batch</option>
+//               {allData?.batches?.map((item) => (
+//                 <option key={item?._id}>{item?.name}</option>
+//               ))}
+//             </select>
+//             <select className="border p-2 mr-2 mb-2 rounded">
+//               <option>Instructor Name</option>
+//               {allData?.teachers?.map((item) => (
+//                 <option key={item?._id}>{item?.name}</option>
+//               ))}
+//             </select>
+//             <button className="bg-blue-600 text-white px-4 py-2 rounded">
+//               Search
+//             </button>
+//             <div>
+//               <label htmlFor="currentDay" className="mr-2">
+//                 Day:
+//               </label>
+//               <select
+//                 id="currentDay"
+//                 value={currentDay}
+//                 onChange={(e) => setCurrentDay(Number(e.target.value))}
+//                 className="border p-2 mr-2 mb-2 rounded"
+//               >
+//                 {Array.from({ length: 12 }, (_, i) => (
+//                   <option key={i + 1} value={i + 1}>
+//                     {i + 1}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+//           </div>
+//           <AttendanceTable
+//             scannedStudents={scannedStudents}
+//             currentDay={currentDay}
+//             attendanceRecord={attendanceRecord}
+//             setAttendanceRecord={setAttendanceRecord}
+//           />
+//         </div>
+//       </main>
+//     </div>
+//   );
+// };
+
+// export default AttendanceReport;
