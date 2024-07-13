@@ -25,6 +25,7 @@ import { useState } from "react";
 import "./App.css";
 import AttendanceReport from "./component/AttendanceReport.jsx";
 import QRScanner from "./component/QrModal.jsx";
+import Navbar from "./component/Navbar.jsx";
 
 function App() {
   const [students, setStudents] = useState([]);
@@ -35,9 +36,16 @@ function App() {
   };
 
   return (
-    <div className="bg-red-50">
-      <QRScanner onScannedStudentsChange={handleScannedStudents} isScannerActive={isScannerActive} />
-      <AttendanceReport scannedStudents={students} onStartScanner={() => setIsScannerActive(true)} />
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <Navbar />
+      <QRScanner
+        onScannedStudentsChange={handleScannedStudents}
+        isScannerActive={isScannerActive}
+      />
+      <AttendanceReport
+        scannedStudents={students}
+        onStartScanner={() => setIsScannerActive(true)}
+      />
     </div>
   );
 }

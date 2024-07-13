@@ -174,6 +174,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FaCheckCircle } from "react-icons/fa";
 import QRScanner from "./QrModal";
+import Navbar from "./Navbar";
 
 const AttendanceReport = ({ scannedStudents, onStartScanner }) => {
   const [allData, setAllData] = useState([]);
@@ -215,25 +216,7 @@ const AttendanceReport = ({ scannedStudents, onStartScanner }) => {
   }, [scannedStudents, currentDay]);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-blue-600 text-white p-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Attendance Portal</h1>
-        <div className="flex items-center">
-          <input
-            type="text"
-            placeholder="Search here..."
-            className="px-2 py-1 rounded mr-2"
-          />
-          <div className="flex items-center">
-            <img
-              src="https://via.placeholder.com/30"
-              alt="Admin"
-              className="rounded-full"
-            />
-            <span className="ml-2">Admin</span>
-          </div>
-        </div>
-      </header>
+    <div className="">
       <div className="flex flex-1 flex-col md:flex-row">
         <main className="flex-1 p-6">
           <div className="bg-white shadow rounded-lg p-6">
