@@ -9,7 +9,7 @@ const AttendanceTable = ({
 }) => {
   return (
     <div className="bg-white shadow rounded-lg p-6">
-      <div>
+      {/* <div>
         <label htmlFor="currentDay" className="mr-2">
           Day:
         </label>
@@ -25,7 +25,7 @@ const AttendanceTable = ({
             </option>
           ))}
         </select>
-      </div>
+      </div> */}
       <div className="overflow-auto h-[55vh]">
         <table className="table-auto w-full">
           <thead className="sticky top-0 bg-white">
