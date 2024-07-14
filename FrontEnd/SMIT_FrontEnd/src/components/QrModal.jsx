@@ -3,11 +3,10 @@ import QrScanner from "qr-scanner";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const QRScanner = ({ onScannedStudentsChange, message }) => {
+const QRScanner = ({ onScannedStudentsChange }) => {
   const videoElementRef = useRef(null);
   const [students, setStudents] = useState([]);
   const qrScannerRef = useRef(null);
-  console.log("message", message);
   useEffect(() => {
     const video = videoElementRef.current;
 
@@ -82,19 +81,15 @@ const QRScanner = ({ onScannedStudentsChange, message }) => {
   }, []);
 
   return (
-    <div>
-      <h1>Custom QR Code Scanner</h1>
+    <div className="bg-white shadow rounded-lg p-6">
       <div className="videoWrapper w-[400px] h-[200px] mx-auto my-10">
         <video className="qrVideo" ref={videoElementRef} />
       </div>
-      <ul>
-        {students.map((student, index) => (
-          <li key={index}>{student}</li>
-        ))}
-      </ul>
       <ToastContainer />
     </div>
   );
 };
 
 export default QRScanner;
+
+// ==== testing code =====
